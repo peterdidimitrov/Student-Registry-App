@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,3 +24,14 @@ jobs:
       run: npm install
     - name: Execute the integration tests
       run: npm test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v3
+      - uses: JorgeLNJunior/render-deploy@v1.4.4
+        with:
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+          wait_deploy: true 
